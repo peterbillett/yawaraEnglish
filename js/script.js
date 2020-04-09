@@ -27,7 +27,7 @@ var getUrlParameter = function getUrlParameter(sParam) {
 };
 
 function loadpage(address, parameters){
-	$("#loadingBar").css('display', 'block');
+	//$("#loadingBar").css('display', 'block');
 	$.get("modules/" + address + ".php" + parameters, function( data ) {
 	  	$( "#pageCore" ).html( data );
 	})
@@ -44,3 +44,14 @@ function loadpage(address, parameters){
 function displayError(errortype, heading, text){
 	$( "#erorrContainer" ).html("<div class=\"alert " + errortype + " alert-dismissible fade show\" role=\"alert\"><strong>" + heading + "</strong><br>" + text + "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button></div>");
 };
+
+$(document).ready(function() {
+	$(document).on('submit', '#quiz', function() {
+		$.post("modules/postQuiz.php", $("form#quiz").serialize(), function() {
+		  	alert( "Submitted!" );
+		}).fail(function() {
+		    alert( "ERROR! Please contact ピーター先生." );
+		  });
+    	return false;
+    });
+});

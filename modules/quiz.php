@@ -1,121 +1,114 @@
 <div class="container">
-<form>
-  <div class="form-group">
-    <label for="exampleFormControlInput1">Student name</label>
-    <input type="test" class="form-control" id="exampleFormControlInput1" placeholder="">
-  </div>
+  <form id="quiz" action="">
+    <div class="form-group">
+      <label for="StudentName">Student name</label>
+      <input type="test" class="form-control" name="StudentName" id="StudentName" placeholder="" required>
+    </div>
 
-  <span>Class</span>
-  <div class="form-check form-check-inline">
-    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
-    <label class="form-check-label" for="inlineRadio1">1</label>
-  </div>
-  <div class="form-check form-check-inline">
-    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
-    <label class="form-check-label" for="inlineRadio2">2</label>
-  </div>
-  <div class="form-check form-check-inline">
-    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option3">
-    <label class="form-check-label" for="inlineRadio3">3</label>
-  </div>
-  <div class="form-check form-check-inline">
-    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio4" value="option4">
-    <label class="form-check-label" for="inlineRadio4">4</label>
-  </div>
-  <div class="form-check form-check-inline">
-    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio5" value="option5">
-    <label class="form-check-label" for="inlineRadio5">5</label>
-  </div>
+    <?php
+      echo '<input type="hidden" name="Grade" value="'.$_GET["grade"].'"/>';
+      echo '<input type="hidden" name="Quiz" value="'.$_GET["id"].'"/>';
+    ?>
 
-  <div>
-    <br><h1>Past participle 過去分詞</h1>
-    <h3>(NEW HORIZON 3 ~ page 6-7)</h3>
-  </div>
+    <span>Class</span>
+    <div class="form-check form-check-inline">
+      <input class="form-check-input" type="radio" name="Class" id="classRadio1" value="Class1" checked>
+      <label class="form-check-label" for="classRadio1">1</label>
+    </div>
+    <div class="form-check form-check-inline">
+      <input class="form-check-input" type="radio" name="Class" id="classRadio2" value="Class2">
+      <label class="form-check-label" for="classRadio2">2</label>
+    </div>
+    <div class="form-check form-check-inline">
+      <input class="form-check-input" type="radio" name="Class" id="classRadio3" value="Class3">
+      <label class="form-check-label" for="classRadio3">3</label>
+    </div>
+    <div class="form-check form-check-inline">
+      <input class="form-check-input" type="radio" name="Class" id="classRadio4" value="Class4">
+      <label class="form-check-label" for="classRadio4">4</label>
+    </div>
+    <div class="form-check form-check-inline">
+      <input class="form-check-input" type="radio" name="Class" id="classRadio5" value="Class5">
+      <label class="form-check-label" for="classRadio5">5</label>
+    </div>
 
-  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">Examples</button>
+    <?php
+      include('config.php');
+      if(isset($_GET['id'])){
 
-  <br><h3>Questions</h3>
-  <hr/>
+        $stmt = $db->prepare("SELECT quiz.title, quiz.pageinfo FROM quiz WHERE quiz.id = ?");
+        $stmt->execute(array( $_GET['id']));
+        if($stmt->rowCount() > 0) {
+          $row = $stmt->fetch(PDO::FETCH_ASSOC);
+          echo '<br><h1>', $row["title"] , '</h1><h3>', $row["pageinfo"] , '</h3><br><h3>Questions</h3><hr/>';
 
-  <div class="row">
-    <div class="form-group col-12 col-md-6">
-      <label for="exampleFormControlSelect1">This painting is ________ by many people.</label>
-      <select class="form-control" id="exampleFormControlSelect1">
-        <?php 
-          $options = array("loved", "love", "use", "used");
-          shuffle($options);
-          foreach ($options as $value) {
-            echo "<option>", $value, "</option>";
+          //CHECK IF THERE ARE ANY EXAMPLES
+          $stmt = $db->prepare("SELECT example.title, example.content FROM example WHERE example.qid = ?");
+          $stmt->execute(array( $_GET['id']));
+          if($stmt->rowCount() > 0) {
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            echo'<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">Examples</button>';
+            echo '<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title">', $row["title"] , '</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">', $row["content"] , ' </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  </div>
+                </div>
+              </div>
+            </div>';
           }
-        ?>
-      </select>
-    </div>
-    
-    <div class="form-group col-12 col-md-6">
-      <label for="exampleFormControlSelect1">Select the correct past participle form for "teach"</label>
-      <select class="form-control" id="exampleFormControlSelect1">
-        <?php 
-          $options = array("taught", "teach", "teached", "teachhed");
-          shuffle($options);
-          foreach ($options as $value) {
-            echo "<option>", $value, "</option>";
+
+          //MULTIPLE CHOICE QUESTIONS
+          $stmt = $db->prepare("SELECT question.id, question.content, answer.content AS answercontent FROM question JOIN answer ON question.id = answer.qid WHERE question.qid = ?");
+          $stmt->execute(array( $_GET['id']));
+          if($stmt->rowCount() > 0) {
+            $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            echo '<div class="row">';
+
+            //Join answers to make a subarray
+            $arr = array();
+            foreach ($rows as $key => $item) {
+               $arr[$item['id']][$key] = $item;
+            }
+            ksort($arr, SORT_NUMERIC);
+
+            //For each question make a select -> loop each answer and make them an option for the select
+            foreach ($arr as $question) {
+              shuffle($question);
+              echo '<div class="form-group col-12 col-md-6"><label for="exampleFormControlSelect', $question[0]["id"], '">', $question[0]["content"], '</label><select class="form-control" name="question', $question[0]["id"], '" id="exampleFormControlSelect', $question[0]["id"], '" required>';
+              foreach ($question as $answer) {
+                echo "<option>", $answer["answercontent"], "</option>";
+              }
+              echo '</select></div>';
+            }
+            echo '</div>';
           }
-        ?>
-      </select>
-    </div>
-  </div>
+        }
 
-  <hr/>
+        //WRITTEN ANSWER QUESTIONS
+        $stmt = $db->prepare("SELECT question.id, question.content FROM question WHERE question.written = 1 AND question.qid = ?");
+        $stmt->execute(array( $_GET['id']));
+        if($stmt->rowCount() > 0) {
+          $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+          shuffle($rows);
+          echo '<div class="row">';
+          foreach ($rows as $question) {
+            echo'<div class="form-group col-12 col-md-6"><label for="exampleFormControlTextarea', $question["id"], '">', $question["content"], '</label><textarea class="form-control" name="question', $question["id"], '" id="exampleFormControlTextarea', $question["id"], '" rows="1" required></textarea></div>';
+          }
+          echo '</div>';
+        }
+      }
+    ?>
 
-  <div class="row">
-    <div class="form-group col-12 col-md-6">
-      <label for="exampleFormControlTextarea1">Nara | visit | by many students</label>
-      <textarea class="form-control" id="exampleFormControlTextarea1" rows="1"></textarea>
-    </div>
-
-    <div class="form-group col-12 col-md-6">
-      <label for="exampleFormControlTextarea1">these books | read | around the world</label>
-      <textarea class="form-control" id="exampleFormControlTextarea2" rows="1"></textarea>
-    </div>
-
-    <div class="form-group col-12 col-md-6">
-      <label for="exampleFormControlTextarea1">A furoshiki is _________ in many ways.</label>
-      <textarea class="form-control" id="exampleFormControlTextarea3" rows="1"></textarea>
-    </div>
-  </div>
-
-  <button type="submit" class="btn btn-primary">Submit</button>
-
-</form>
+    <input id="submitQuiz" class="btn btn-primary" value="Submit" type="submit">
+  </form>
 </div>
 <br>
-
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Auxiliary verb + past participle</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <p>Example auxiliary verbs: is, isn't, was, wasn't, are, aren't, were, weren't, has, hasn't, had, hadn’t, have, haven’t</p>
-        <p>Example past participles: used, studied, closed, opened, cleaned, washed, asked, touched, started, invited, painted</p>
-
-        <p><b>Example sentences:</b>
-          <br>I have forgotten my homework!
-          <br>Disneyland is loved in Japan.
-          <br>Which light is turned off?<br>
-        </p>
-
-        <div class="embed-responsive embed-responsive-16by9">
-          <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/" allowfullscreen></iframe>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
-</div>
