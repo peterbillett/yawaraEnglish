@@ -1,29 +1,52 @@
+//Dynamic loading
 $(function () {
 	$('.alert').alert();
-	var category = getUrlParameter("category");
-	var grade = getUrlParameter("grade");
-	var id = getUrlParameter("id");
-	if (category && grade){
-		if (id) {
-			loadpage(category,"?grade="+grade+"&id="+id);
-		} else {
-			loadpage(category,"?grade="+grade);
-		}
+	var parameters = getUrlParameter(false);
+	var category = getUrlParameter(true);
+	if (category){
+		loadpage(category, "?"+parameters);
 	} else {
-		loadpage("home","");
+		loadpage("home", "");
 	}
 });
 
-//https://stackoverflow.com/questions/19491336/get-url-parameter-jquery-or-how-to-get-query-string-values-in-js 15-08-2017
+$(document).ready(function() {
+	$(document).on('submit', '#quiz', function() {
+		$.post("modules/postQuiz.php", $("form#quiz").serialize(), function() {
+		  	alert( "Submitted!");
+		}).fail(function() {
+		    alert( "ERROR! Please contact ピーター先生." );
+		});
+    	return false;
+    });
+
+    $(document).on('submit', '#login', function() {
+		$.post("modules/login.php", $("form#login").serialize(), function(data) {
+			window.location.href = '/'+data.result;
+		}, "json").fail(function() {
+		    alert("ERROR: The username or password was incorrect.");
+		});
+    	return false;
+    });
+});
+
 //Used to get parameters from the url to redirect the user on load (eg items)
-var getUrlParameter = function getUrlParameter(sParam) {
-    var sPageURL = decodeURIComponent(window.location.search.substring(1)), sURLVariables = sPageURL.split('&'), sParameterName, i;
+var getUrlParameter = function getUrlParameter(category) {
+    var sPageURL = decodeURIComponent(window.location.search.substring(1)), sURLVariables = sPageURL.split('&'), sParameterName, i, sPageURL = "";
     for (i = 0; i < sURLVariables.length; i++) {
         sParameterName = sURLVariables[i].split('=');
-        if (sParameterName[0] === sParam) {
-            return sParameterName[1] === undefined ? true : sParameterName[1];
+        if (category == true) {
+        	if (sParameterName[0] === "category") {
+	            return sParameterName[1] === undefined ? true : sParameterName[1];
+	        }
+        } else {
+        	if (sParameterName[0] != "category") {
+        		if (sPageURL != "") sPageURL += "&";
+	            sPageURL += sParameterName[0]+"="+sParameterName[1];
+	        }
         }
     }
+    if (category == false) return sPageURL;
 };
 
 function loadpage(address, parameters){
@@ -45,13 +68,8 @@ function displayError(errortype, heading, text){
 	$( "#erorrContainer" ).html("<div class=\"alert " + errortype + " alert-dismissible fade show\" role=\"alert\"><strong>" + heading + "</strong><br>" + text + "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button></div>");
 };
 
-$(document).ready(function() {
-	$(document).on('submit', '#quiz', function() {
-		$.post("modules/postQuiz.php", $("form#quiz").serialize(), function() {
-		  	alert( "Submitted!" );
-		}).fail(function() {
-		    alert( "ERROR! Please contact ピーター先生." );
-		  });
-    	return false;
-    });
-});
+function sendPost(address){
+	$.post(address).done(function( data ) {
+	    $( "#messageContainer" ).html( data );
+	});
+}

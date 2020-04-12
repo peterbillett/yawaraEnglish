@@ -8,7 +8,7 @@
       include('config.php');
 
       if(isset($_GET['grade'])){
-          $stmt = $db->prepare("SELECT quiz.id, quiz.title, quiz.pageInfo FROM quiz JOIN weeklywork ON quiz.wwid = weeklywork.id WHERE weeklywork.grade = ? AND weeklywork.startdate <= now() ORDER BY quiz.startdate");
+          $stmt = $db->prepare("SELECT quiz.id, quiz.title, quiz.pageInfo FROM quiz JOIN units ON quiz.wwid = units.id WHERE units.grade = ? ORDER BY quiz.id");
           $stmt->execute(array($_GET['grade']));
 
           if($stmt->rowCount() > 0) {

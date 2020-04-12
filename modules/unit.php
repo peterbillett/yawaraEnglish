@@ -1,23 +1,39 @@
-<?php include('config.php'); ?>
-<div class="container">
+<?php
+ 	if(isset($_GET['id']) == false OR isset($_GET['grade']) == false){
+		exit();
+	}
+	
+	include('config.php');
 
-	<?php 
-		$stmt = $db->prepare("SELECT weeklywork.title FROM weeklywork WHERE weeklywork.id = ?");
-		$stmt->execute(array($_GET['id']));
-		if($stmt->rowCount() > 0) {
-			$result = $stmt->fetchColumn();
-			echo '<h1>', $result , '</h1>';
-		}
-	?>
+	$stmt = $db->prepare("SELECT units.title FROM units WHERE units.id = ?");
+	$stmt->execute(array($_GET['id']));
+	if($stmt->rowCount() < 1) {
+		exit();
+	} else {
+		$result = $stmt->fetchColumn();
+	}
+	echo '<nav aria-label="breadcrumb"><ol class="breadcrumb">';
+	echo '<li class="breadcrumb-item"><a href="?category=grade&grade='.$_GET["grade"].'">'.$_GET["grade"].'年生</a></li>';
+    echo '<li class="breadcrumb-item"><a href="?category=units&grade='.$_GET["grade"].'">Units</a></li>';
+    echo '<li class="breadcrumb-item active" aria-current="page">Unit</li>';
+	echo '</ol></nav>';
+	echo '<div class="container"><h1>', $result , '</h1>';
+?>
 
 	<!-- LESSONS -->
 	<div class="row">
 		<div class="col-12">
 			<h2>Lessons</h2>
 		</div>
-		<?php 
-			for ($x = 1; $x <= 4; $x++) {
-				echo '<div class="col-12 col-md-4"><div class="card" id="lesson', $x, '"><a class="card-body btn btn-primary alert-primary" href="?category=lesson&grade=', $_GET["grade"], 'id=', $x, '"><h5 class="card-title">Lesson ', $x, '</h5><p class="card-text">Example info</p></a></div></div>';
+		<?php
+	   		$stmt = $db->prepare("SELECT lesson.id, lesson.title FROM lesson WHERE lesson.uid = ? ORDER BY lesson.id");
+	   		$stmt->execute(array($_GET['id']));
+
+	   		if($stmt->rowCount() > 0) {
+				$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+				foreach ($rows as $lesson) {
+					echo '<div class="col-12 col-md-4"><div class="card" id="quiz', $lesson["id"], '"><a class="card-body btn btn-primary alert-primary" href="?category=lesson&grade=', $_GET["grade"], '&id=',$_GET['id'],'&lesson=', $lesson["id"], '"><h5 class="card-title">', $lesson["title"], '</h5><p class="card-text"></p></a></div></div>';
+				}
 			}
 		?>
 	</div>
@@ -68,7 +84,7 @@
 		</div>
 		<?php
 			if(isset($_GET['id'])){
-		   		$stmt = $db->prepare("SELECT video.id, video.url FROM video JOIN weeklywork ON video.wwid = weeklywork.id WHERE weeklywork.grade = ? AND video.wwid = ? ORDER BY weeklywork.startdate");
+		   		$stmt = $db->prepare("SELECT video.id, video.url FROM video JOIN units ON video.wwid = units.id WHERE units.grade = ? AND video.wwid = ? ORDER BY units.startdate");
 		   		$stmt->execute(array($_GET['grade'], $_GET['id']));
 
 		   		if($stmt->rowCount() > 0) {

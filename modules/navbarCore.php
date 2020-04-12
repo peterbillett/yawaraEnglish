@@ -16,20 +16,15 @@
           <div class=\"dropdown-menu\" aria-labelledby=\"navbarDropdown\">
             <a class=\"dropdown-item\" href=\"?category=grade&grade=$value\">All</a>
             <div class=\"dropdown-divider\"></div>
-            <a class=\"dropdown-item\" href=\"?category=weeklywork&grade=$value\">Weekly work</a>
+            <a class=\"dropdown-item\" href=\"?category=units&grade=$value\">Units</a>
             <a class=\"dropdown-item\" href=\"?category=tests&grade=$value\">Quizes</a>
             <a class=\"dropdown-item\" href=\"?category=worksheets&grade=$value\">Worksheets</a>
             <a class=\"dropdown-item\" href=\"?category=videos&grade=$value\">Videos</a>
-            <a class=\"dropdown-item disabled\" href=\"?category=audio&grade=$value\">Audio</a>
           </div>
         </li>";
         }
       ?>
-
-  <!--data-English=\"Tests\" data-Japanese=\"テスト\"-->
-
+    
   </ul>
-  <!-- <div class="form-inline my-2 my-lg-0">
-    <button class="btn btn-outline-success my-2 my-sm-0">日本語</button>
-  </div> -->
+      <a class="btn btn-outline-success my-2 my-sm-0" href="/?category=senseilogin">Teachers</a>
 </div>

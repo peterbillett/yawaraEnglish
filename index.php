@@ -15,7 +15,6 @@
 		    <META HTTP-EQUIV="Refresh" CONTENT="0;URL=ie8Redirect">
 		<![endif]-->
 	    
-	    <!--Get the javascript files-->
 		<script src="js/jquery-3.4.1.min.js"></script>
 		<script src="js/tooltip.min.js"></script>
 		<script src="js/bootstrap.bundle.min.js"></script>
@@ -24,6 +23,10 @@
 		<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
 		<link rel="stylesheet" type="text/css" href="css/main.css">
 		<link rel="shortcut icon" href="media/favicon.ico"/>
+
+		<!-- include summernote css/js -->
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/summernote@0.8.16/dist/summernote-bs4.min.css">
+    	<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.16/dist/summernote-bs4.min.js"></script>
 
 	</head>
 
@@ -39,7 +42,7 @@
 		</div>
 
 		<!--Error message-->
-		<div id="erorrContainer">
+		<div id="messageContainer">
 		</div>
 
 		<!--Pages load into here-->
