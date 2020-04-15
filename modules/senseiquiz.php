@@ -1,10 +1,11 @@
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
     <?php
-      echo '<li class="breadcrumb-item"><a href="?category=grade&grade='.$_GET["grade"].'">'.$_GET["grade"].'年生</a></li>';
-      echo '<li class="breadcrumb-item"><a href="?category=units&grade='.$_GET["grade"].'">Units</a></li>';
-      echo '<li class="breadcrumb-item"><a href="?category=unit&grade='.$_GET["grade"].'&id='.$_GET["id"].'">Unit</a></li>';
-      echo '<li class="breadcrumb-item active" aria-current="page">Quiz</li>';
+      echo '<li class="breadcrumb-item"><a href="?category=sensei">Main page</a></li>';
+	    echo '<li class="breadcrumb-item"><a href="?category=senseigrades&grade='.$_GET["grade"].'">'.$_GET["grade"].'年生</a></li>';
+	    echo '<li class="breadcrumb-item"><a href="?category=senseiunits&grade='.$_GET["grade"].'">Units</a></li>';
+	    echo '<li class="breadcrumb-item"><a href="?category=senseiunit&grade='.$_GET["grade"].'&id='.$_GET["unit"].'">Unit</a></li>';
+	    echo '<li class="breadcrumb-item active" aria-current="page">Quiz</li>';
     ?>
   </ol>
 </nav>

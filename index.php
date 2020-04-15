@@ -14,9 +14,9 @@
 	    <!--[if IE 8]>
 		    <META HTTP-EQUIV="Refresh" CONTENT="0;URL=ie8Redirect">
 		<![endif]-->
-	    
+
 		<script src="js/jquery-3.4.1.min.js"></script>
-		<script src="js/tooltip.min.js"></script>
+		<!-- <script src="js/tooltip.min.js"></script> -->
 		<script src="js/bootstrap.bundle.min.js"></script>
 		<script src="js/script.js"></script>
 

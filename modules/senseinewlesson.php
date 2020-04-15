@@ -39,14 +39,20 @@
 						echo '<option value="'.$unit["id"].'">'.$unit["title"].'</option>';
 					}
 				}
-				echo '</select></div>';
+				echo '</select>
+				</div>
+				</div>';
 
-		      	echo '<input type="hidden" name="grade" value="'.$_GET["grade"].'"/>';
-		    ?>
-		</div>
-		<p><input type="submit" value="Submit" class="btn btn-primary col-12"></p>
-		<textarea id="summernote" name="content" required></textarea>
+		      	echo '<input type="hidden" name="grade" value="'.$_GET["grade"].'"/>
+		    <br>
+			<textarea id="summernote" name="content" required></textarea>
+			<div class="row">
+				<input type="submit" value="Submit" class="btn btn-primary col-12 col-md-6">
+				<a href="/?category=senseiunit&grade=', $_GET["grade"], '&id=',$_GET['id'], '" class="btn btn-light col-12 col-md-6">Cancel</a>
+			</div>';
+			?>
 	</form>
+	<?php include("logoutbar.php")?>
 </div>
 
 <script>

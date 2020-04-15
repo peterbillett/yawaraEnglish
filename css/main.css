@@ -12,3 +12,24 @@ a {
 	border: none;
     border-radius: 0;
 }
+
+#dropzone {
+  	margin-bottom: 3rem !important;
+}
+
+.dropzone {
+	border: 2px dashed #0087F7 !important;
+	border-radius: 5px !important;
+	background: white !important;
+}
+
+.dropzone .dz-message {
+	font-weight: 400 !important;
+}
+
+.dropzone .dz-message .note {
+	font-size: 0.8em !important;
+	font-weight: 200 !important;
+	display: block !important;
+	margin-top: 1.4rem !important;
+}

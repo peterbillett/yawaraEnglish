@@ -5,7 +5,7 @@
 			include('config.php');
 
 			if(isset($_GET['grade'])){
-		   		$stmt = $db->prepare("SELECT video.id, video.url FROM video JOIN units ON video.wwid = units.id WHERE units.grade = ? ORDER BY units.startdate");
+		   		$stmt = $db->prepare("SELECT video.id, video.url FROM video JOIN units ON video.wwid = units.id WHERE units.grade = ? ORDER BY units.id");
 		   		$stmt->execute(array($_GET['grade']));
 
 		   		if($stmt->rowCount() > 0) {

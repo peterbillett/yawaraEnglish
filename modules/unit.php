@@ -45,17 +45,15 @@
 			<h2>Quizes</h2>
 		</div>
 		<?php
-			if(isset($_GET['id'])){
-		   		$stmt = $db->prepare("SELECT quiz.id, quiz.title, quiz.pageInfo FROM quiz WHERE quiz.wwid = ? ORDER BY quiz.startdate");
-		   		$stmt->execute(array($_GET['id']));
+	   		$stmt = $db->prepare("SELECT quiz.id, quiz.title, quiz.pageInfo FROM quiz WHERE quiz.wwid = ? AND quiz.enabled = 1 ORDER BY quiz.id");
+	   		$stmt->execute(array($_GET['id']));
 
-		   		if($stmt->rowCount() > 0) {
-					$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-					foreach ($rows as $quiz) {
-						echo '<div class="col-12 col-md-4"><div class="card" id="quiz', $quiz["id"], '"><a class="card-body btn btn-primary alert-danger" href="?category=quiz&grade=', $_GET["grade"], '&id=', $quiz["id"], '"><h5 class="card-title">', $quiz["title"], '</h5><p class="card-text">', $quiz["pageInfo"], '</p></a></div></div>';
-					}
+	   		if($stmt->rowCount() > 0) {
+				$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+				foreach ($rows as $quiz) {
+					echo '<div class="col-12 col-md-4"><div class="card" id="quiz', $quiz["id"], '"><a class="card-body btn btn-primary alert-danger" href="?category=quiz&grade=', $_GET["grade"], '&id=', $quiz["id"], '"><h5 class="card-title">', $quiz["title"], '</h5><p class="card-text">', $quiz["pageInfo"], '</p></a></div></div>';
 				}
-		   	}
+			}
 		?>
 	</div>
 	<hr>
@@ -66,13 +64,15 @@
 			<h2>Worksheets</h2>
 		</div>
 		<?php
-			if(isset($_GET['grade'])){
-			    $grade = $_GET['grade'];
-				$files = glob("../worksheets/$grade/*.{pdf}", GLOB_BRACE);
-				foreach($files as $file) {
-				  echo "<div class=\"col-md-4 col-12\"><a class=\"btn btn-light\" style=\"width: 100%;\" href=\"worksheets/$grade/" . basename($file) . "\">" . basename($file) . "</a></div>";
-				};
-			};
+	   		$stmt = $db->prepare("SELECT worksheet.id, worksheet.title FROM worksheet WHERE worksheet.uid = ? ORDER BY worksheet.title ASC");
+	   		$stmt->execute(array($_GET['id']));
+
+	   		if($stmt->rowCount() > 0) {
+				$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+				foreach ($rows as $worksheet) {
+					echo '<div class="col-12 col-md-4"><div class="card" id="worksheet', $worksheet["id"], '"><a class="card-body btn btn-light" href="worksheets/', $_GET['grade'], '/', $worksheet["title"],'"><h5 class="card-title">', $worksheet["title"], '</h5></a></div></div>';
+				}
+			}
 		?>
 	</div>
 	<hr>
@@ -83,17 +83,15 @@
 			<h2>Videos</h2>
 		</div>
 		<?php
-			if(isset($_GET['id'])){
-		   		$stmt = $db->prepare("SELECT video.id, video.url FROM video JOIN units ON video.wwid = units.id WHERE units.grade = ? AND video.wwid = ? ORDER BY units.startdate");
-		   		$stmt->execute(array($_GET['grade'], $_GET['id']));
+	   		$stmt = $db->prepare("SELECT video.id, video.url FROM video JOIN units ON video.wwid = units.id WHERE units.grade = ? AND video.wwid = ? ORDER BY units.id");
+	   		$stmt->execute(array($_GET['grade'], $_GET['id']));
 
-		   		if($stmt->rowCount() > 0) {
-					$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-					foreach ($rows as $video) {
-						echo '<div id="video' . $video["id"] . '" class="col-md-4 col-12"><div class="embed-responsive embed-responsive-16by9"><iframe class="embed-responsive-item" src="' . $video["url"] . '" allowfullscreen></iframe></div></div>';
-					}
+	   		if($stmt->rowCount() > 0) {
+				$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+				foreach ($rows as $video) {
+					echo '<div id="video' . $video["id"] . '" class="col-md-4 col-12"><div class="embed-responsive embed-responsive-16by9"><iframe class="embed-responsive-item" src="' . $video["url"] . '" allowfullscreen></iframe></div></div>';
 				}
-		   	}
+			}
 		?>
 		<hr>
 		<br>
